@@ -40,5 +40,15 @@ jobs:
       - name: Check Python syntax
         run: python -m compileall .
 
-      - name: Run tests
-        run: pytest
+      - name: Run tests and generate report
+        run: |
+          mkdir -p reports
+          pytest --junitxml=reports/test-results.xml
+
+      - name: Upload test report artifact
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: python-test-report
+          path: reports/test-results.xml
+          retention-days: 7
